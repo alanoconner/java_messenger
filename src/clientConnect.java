@@ -24,7 +24,7 @@ public class clientConnect {
             in = socket.getInputStream();
             dataout = new DataOutputStream(out);
             datain = new DataInputStream(in);
-            System.out.println("client initialized new connection");
+            dataout.writeBytes("Client initialized new connection");
 
 
         } catch (IOException e) {
