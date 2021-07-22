@@ -3,17 +3,21 @@ import javax.swing.text.DefaultCaret;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.DataInputStream;
-import java.net.Socket;
 
-import static javax.swing.text.DefaultCaret.ALWAYS_UPDATE;
+
+
 
 public class ClientUI implements ActionListener {
 
     JFrame jFrame;
     JTextArea msg_log;     // all chat field
     JTextField msg_enter;  // typing field
-    DefaultCaret caret;
+    JScrollPane scrollPane;
+    clientConnect clientConnect;
+
+
+    int PORT = 3435;
+
 
 
     public static void main(String[] args) {
@@ -21,6 +25,7 @@ public class ClientUI implements ActionListener {
             @Override
             public void run() {
                 new ClientUI();
+
             }
         });
     }
@@ -29,6 +34,7 @@ public class ClientUI implements ActionListener {
         jFrame = new JFrame("Client UI");
         msg_enter = new JTextField();
         msg_log = new JTextArea();
+        scrollPane = new JScrollPane(msg_log);
 
 
 
@@ -37,22 +43,23 @@ public class ClientUI implements ActionListener {
         jFrame.setLocationRelativeTo(null);
         jFrame.setAlwaysOnTop(true);
         jFrame.setVisible(true);
-        caret = (DefaultCaret)msg_log.getCaret();
-        caret.setUpdatePolicy(ALWAYS_UPDATE);
-
-
+        jFrame.setResizable(false);
+        jFrame.add(scrollPane);
 
 
         jFrame.add(msg_enter, BorderLayout.SOUTH);
         jFrame.add(msg_log, BorderLayout.CENTER);
         msg_log.setEditable(false);
+        msg_log.setLineWrap(true);
 
-
-        //////////////////////////////////////////////////////
-        ////////////////////////////////////////////////////// initializing connection
-       // new clientConnect(3435);
 
         msg_enter.addActionListener(this);
+
+
+        clientConnect = new clientConnect(PORT);
+        while(true){
+            msg_print();
+        }
 
 
     }
@@ -60,13 +67,23 @@ public class ClientUI implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         String msg = msg_enter.getText();
-        msg_enter.setText("");
-        if(!msg.equals("")){
-            msg_log.append("  " +msg+"\n" );
-        }
-
+        if(msg.equals("")) return;
+        clientConnect.onSendmsg(msg);
+        msg_enter.setText(null);
+    }
+    synchronized void msg_print(){
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                String msg = clientConnect.onReceivemsg();
+                msg_log.append("  " + msg + "\n");
+                msg_log.setCaretPosition(msg_log.getDocument().getLength());
+            }
+        });
 
     }
+
+
 
 
 }
