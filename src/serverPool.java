@@ -4,14 +4,11 @@ import java.net.Socket;
 import java.util.ArrayList;
 
 public class serverPool {
-     InputStream in;
-     OutputStream out;
-     BufferedReader datain;
-     BufferedWriter dataout;
+
      ServerSocket serverSocket;
      Socket socket;
-     ArrayList<clientConnect> clientConnects;
-     Thread sendAndReceiveThread;
+     ArrayList<ClientThread> clientConnects;
+     Thread clientThread;
 
 
     public static void main(String[] args) {
@@ -23,53 +20,25 @@ public class serverPool {
          try {
              serverSocket = new ServerSocket(port);
              clientConnects = new ArrayList<>();
-             socket = serverSocket.accept();
 
-             in = socket.getInputStream();
-             out = socket.getOutputStream();
-             datain = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-             dataout = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-             sendAndReceiveThread = new Thread(new Runnable() {
-                 @Override
-                 public void run() {
-                    while(true){
-                        onReceive();
-                        onSend();
-                        try {
-                            if(datain.readLine().equals("/serverstop")){
-                                dataout.write("Client initialized server suicide");
-                                datain.close();
-                                dataout.close();
-                                in.close();
-                                out.close();
-                                socket.close();
-                                sendAndReceiveThread.interrupt();
-                            }
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                 }
-             });
+             System.out.println("connection created");
 
-
+             while(true){
+                 Socket socket = serverSocket.accept();
+                 System.out.println("connection created");
+                 ClientThread clientThread = new ClientThread(this,socket);
+                 Thread thread = new Thread(clientThread);
+                 thread.start();
+                 clientConnects.add(clientThread);
+             }
          } catch (IOException e) {
              e.printStackTrace();
          }
      }
 
-    public void  onReceive(){
-        try {
-            dataout.write(datain.readLine());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-    public void onSend(){
-        try {
-            dataout.write(datain.readLine());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+     public ArrayList<ClientThread> getClients(){
+        return clientConnects ;
+     }
+
+
 }

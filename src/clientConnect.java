@@ -10,22 +10,21 @@ public class clientConnect {
     BufferedWriter dataout;
     Socket socket;
 
-
-
     public static void main(String[] args) {
         new clientConnect(3435);
-
     }
 
 
     public clientConnect(int port){
         try {
-            socket = new Socket("192.168.10.102", port);
+            socket = new Socket("127.0.0.1", port);
+
             out = socket.getOutputStream();
             in = socket.getInputStream();
             datain = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             dataout = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 
+            dataout.write("Client initialized new connection");
 
         } catch (IOException e) {
             e.printStackTrace();
