@@ -6,6 +6,7 @@ public class ClientThread implements Runnable {
     private Socket socket;
     private PrintWriter clientOut;
     private serverPool server;
+    ClientUI clientUI;
     //
     BufferedReader datain;
     BufferedWriter dataout;
@@ -15,9 +16,7 @@ public class ClientThread implements Runnable {
         this.socket = socket;
     }
 
-    private PrintWriter getWriter(){
-        return clientOut;
-    }
+
 
     @Override
     public void run() {
@@ -25,21 +24,22 @@ public class ClientThread implements Runnable {
             // setup
             datain = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             dataout = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-            Scanner in = new Scanner(socket.getInputStream());
+            clientUI = new ClientUI();
+
 
 
             // start communicating
             while(!socket.isClosed()){
-                String input = in.nextLine();
+                String input = clientUI.getText();
+                if(input!=null){
+                    for(ClientThread client : server.getClients()) {
 
-                for(ClientThread client : server.getClients()) {
-                    PrintWriter thatClientOut = client.getWriter();
-                    if (thatClientOut != null) {
-                        thatClientOut.write(input + "\r\n");
-                        thatClientOut.flush();
+                        if (client != null) {
+                            dataout.write(input + "\r\n");
+                            dataout.flush();
+                        }
                     }
                 }
-
             }
         } catch (IOException e) {
             e.printStackTrace();

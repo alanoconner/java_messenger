@@ -13,6 +13,7 @@ public class ClientUI extends JFrame implements ActionListener  {
     JTextArea msg_log;     // all chat field
     JTextField msg_enter;  // typing field
     JScrollPane scrollPane;
+    String msg;
 
 
 
@@ -56,8 +57,18 @@ public class ClientUI extends JFrame implements ActionListener  {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        msg_log.append(msg_enter.getText()+"\n");
+        //msg_log.append(msg_enter.getText()+"\n");
+        msg= msg_enter.getText();
         msg_enter.setText(null);
+        msg= null;
+    }
+
+    public String getText(){
+        return msg;
+    }
+
+    public void setText (String msg){
+        msg_log.append(msg);
     }
 
 

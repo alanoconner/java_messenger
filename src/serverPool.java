@@ -3,12 +3,12 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
-public class serverPool {
+public class serverPool implements Runnable {
 
      ServerSocket serverSocket;
-     Socket socket;
+     ServerThread serverThread;
      ArrayList<ClientThread> clientConnects;
-     Thread clientThread;
+     int port;
 
 
     public static void main(String[] args) {
@@ -16,24 +16,7 @@ public class serverPool {
     }
 
      public serverPool(int port){
-
-         try {
-             serverSocket = new ServerSocket(port);
-             clientConnects = new ArrayList<>();
-
-             System.out.println("connection created");
-
-             while(true){
-                 Socket socket = serverSocket.accept();
-                 System.out.println("connection created");
-                 ClientThread clientThread = new ClientThread(this,socket);
-                 Thread thread = new Thread(clientThread);
-                 thread.start();
-                 clientConnects.add(clientThread);
-             }
-         } catch (IOException e) {
-             e.printStackTrace();
-         }
+        this.port = port;
      }
 
      public ArrayList<ClientThread> getClients(){
@@ -41,4 +24,25 @@ public class serverPool {
      }
 
 
+    @Override
+    public void run() {
+        try {
+            serverSocket = new ServerSocket(port);
+            clientConnects = new ArrayList<>();
+            Thread serverthread = new Thread(serverThread);
+            serverthread.start();
+
+            while(true){
+                Socket socket = serverSocket.accept();
+                System.out.println("connection created");
+                ClientThread clientThread = new ClientThread(this,socket);
+                Thread thread = new Thread(clientThread);
+                thread.start();
+
+                clientConnects.add(clientThread);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
