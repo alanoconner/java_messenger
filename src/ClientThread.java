@@ -44,6 +44,8 @@ public class ClientThread implements Runnable {
                         if(thatClientOut != null&&input!=null){
                             thatClientOut.write(input + "\r\n");
                             thatClientOut.flush();
+                            //clientConnect.setUIText(input+"\n");
+
                             //inputUI = null;
                         }
                     }

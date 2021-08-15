@@ -62,12 +62,10 @@ public class clientConnect {
             serverAccessThread.start();
             String notSpam = null;
             while(serverAccessThread.isAlive()){
-
                 if(getUIText()!=null&&!getUIText().equals(notSpam)){
                     serverThread.addNextMessage(getUIText());
                     notSpam = getUIText();
                 }
-
             }
         }catch(IOException ex){
             System.err.println("Unable to set connection, please try again");

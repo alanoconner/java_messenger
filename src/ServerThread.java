@@ -47,6 +47,7 @@ public class ServerThread implements Runnable {
                 if(serverInStream.available() > 0){
                     if(serverIn.hasNextLine()){
                         System.out.println(serverIn.nextLine());
+                        //clientConnect.setUIText(serverIn.nextLine()+"\n");
 
                     }
                 }
