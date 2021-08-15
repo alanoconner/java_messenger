@@ -14,6 +14,7 @@ public class ClientUI extends JFrame implements ActionListener  {
     JTextField msg_enter;  // typing field
     JScrollPane scrollPane;
     String msg;
+    ClientThread clientThread = new ClientThread();
 
 
 
@@ -50,6 +51,7 @@ public class ClientUI extends JFrame implements ActionListener  {
 
         frame.add(jPanel);
         frame.setVisible(true);
+        frame.setAlwaysOnTop(true);
 
     }
 
@@ -59,8 +61,8 @@ public class ClientUI extends JFrame implements ActionListener  {
     public void actionPerformed(ActionEvent e) {
         //msg_log.append(msg_enter.getText()+"\n");
         msg= msg_enter.getText();
+        clientThread.scannerSetText(msg);
         msg_enter.setText(null);
-        msg= null;
     }
 
     public String getText(){
@@ -69,6 +71,7 @@ public class ClientUI extends JFrame implements ActionListener  {
 
     public void setText (String msg){
         msg_log.append(msg);
+        msg_log.setCaretPosition(msg_log.getDocument().getLength());
     }
 
 

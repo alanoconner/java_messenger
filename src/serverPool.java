@@ -1,48 +1,56 @@
-import java.io.*;
+
+import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.List;
 
-public class serverPool implements Runnable {
+public class serverPool {
 
-     ServerSocket serverSocket;
-     ServerThread serverThread;
-     ArrayList<ClientThread> clientConnects;
-     int port;
+    private static final int portNumber = 4444;
 
+    private int serverPort;
+    private List<ClientThread> clients;
 
-    public static void main(String[] args) {
-        new serverPool(3435);
+    public static void main(String[] args){
+        serverPool server = new serverPool(portNumber);
+        server.startServer();
     }
 
-     public serverPool(int port){
-        this.port = port;
-     }
+    public serverPool(int portNumber){
+        this.serverPort = portNumber;
+    }
 
-     public ArrayList<ClientThread> getClients(){
-        return clientConnects ;
-     }
+    public List<ClientThread> getClients(){
+        return clients;
+    }
 
-
-    @Override
-    public void run() {
+    private void startServer(){
+        clients = new ArrayList<ClientThread>();
+        ServerSocket serverSocket = null;
         try {
-            serverSocket = new ServerSocket(port);
-            clientConnects = new ArrayList<>();
-            Thread serverthread = new Thread(serverThread);
-            serverthread.start();
+            serverSocket = new ServerSocket(serverPort);
+            acceptClients(serverSocket);
+        } catch (IOException e){
+            System.err.println("Could not listen on port: "+serverPort);
+            System.exit(1);
+        }
+    }
 
-            while(true){
+    private void acceptClients(ServerSocket serverSocket){
+
+        System.out.println("server starts port = " + serverSocket.getLocalSocketAddress());
+        while(true){
+            try{
                 Socket socket = serverSocket.accept();
-                System.out.println("connection created");
-                ClientThread clientThread = new ClientThread(this,socket);
-                Thread thread = new Thread(clientThread);
+                System.out.println("Client initialized new connection : " + socket.getRemoteSocketAddress());
+                ClientThread client = new ClientThread(this, socket);
+                Thread thread = new Thread(client);
                 thread.start();
-
-                clientConnects.add(clientThread);
+                clients.add(client);
+            } catch (IOException ex){
+                System.out.println("Accept failed on : "+serverPort);
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 }
