@@ -43,13 +43,20 @@ public class ServerThread implements Runnable {
 
 
 
+
             while(!socket.isClosed()){
                 if(serverInStream.available() > 0){
                     if(serverIn.hasNextLine()){
-                        System.out.println(serverIn.nextLine());
-                        //clientConnect.setUIText(serverIn.nextLine()+"\n");
+                        String msg = serverIn.nextLine();
+                        //System.out.println(msg);
+
+                        clientConnect.setUIText(msg+"\n");
+                        //System.out.println(clientConnect.getUIText());///////////////////
 
                     }
+
+
+
                 }
                 if(hasMessages){
                     String nextSend = "";
@@ -58,7 +65,7 @@ public class ServerThread implements Runnable {
                         hasMessages = !messagesToSend.isEmpty();
                     }
                     serverOut.println(userName + " > " + nextSend);
-                    clientConnect.setUIText(userName + " > " + nextSend+ "\n");////////////////
+                    //clientConnect.setUIText(userName + " > " + nextSend+ "\n");////////////////
                     serverOut.flush();
                 }
             }

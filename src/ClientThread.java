@@ -45,6 +45,7 @@ public class ClientThread implements Runnable {
                             thatClientOut.write(input + "\r\n");
                             thatClientOut.flush();
                             //clientConnect.setUIText(input+"\n");
+                            //thatClient.scannerSetText(input+"\n");
 
                             //inputUI = null;
                         }
@@ -58,6 +59,6 @@ public class ClientThread implements Runnable {
     }
 
     public void scannerSetText(String msg){
-        inputedMessage = msg;
+        //clientConnect.setUIText(msg);
     }
 }
