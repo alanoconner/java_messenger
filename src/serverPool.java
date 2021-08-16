@@ -14,7 +14,7 @@ public class serverPool {
 
     public static void main(String[] args){
         serverPool server = new serverPool(portNumber);
-        server.startServer();
+        server.serverStart();
     }
 
     public serverPool(int portNumber){
@@ -25,19 +25,19 @@ public class serverPool {
         return clients;
     }
 
-    private void startServer(){
+    private void serverStart(){
         clients = new ArrayList<ClientThread>();
         ServerSocket serverSocket = null;
         try {
             serverSocket = new ServerSocket(serverPort);
-            acceptClients(serverSocket);
+            clientAcceptThread(serverSocket);
         } catch (IOException e){
             System.err.println("Could not listen on port: "+serverPort);
             System.exit(1);
         }
     }
 
-    private void acceptClients(ServerSocket serverSocket){
+    private void clientAcceptThread(ServerSocket serverSocket){
 
         System.out.println("server starts port = " + serverSocket.getLocalSocketAddress());
         while(true){

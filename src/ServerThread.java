@@ -8,20 +8,20 @@ import java.util.Scanner;
 public class ServerThread implements Runnable {
     private Socket socket;
     private String userName;
-    private boolean isAlived;
-    private final LinkedList<String> messagesToSend;
-    private boolean hasMessages = false;
+    private boolean isAlive;
+    private final LinkedList<String> msgToSend;
+    private boolean isAnyMessage = false;
 
     public ServerThread(Socket socket, String userName){
         this.socket = socket;
         this.userName = userName;
-        messagesToSend = new LinkedList<String>();
+        msgToSend = new LinkedList<String>();
     }
 
     public void addNextMessage(String message){
-        synchronized (messagesToSend){
-            hasMessages = true;
-            messagesToSend.push(message);
+        synchronized (msgToSend){
+            isAnyMessage = true;
+            msgToSend.push(message);
         }
     }
 
@@ -49,20 +49,14 @@ public class ServerThread implements Runnable {
                     if(serverIn.hasNextLine()){
                         String msg = serverIn.nextLine();
                         //System.out.println(msg);
-
                         clientConnect.setUIText(msg+"\n");
-                        //System.out.println(clientConnect.getUIText());///////////////////
-
                     }
-
-
-
                 }
-                if(hasMessages){
+                if(isAnyMessage){
                     String nextSend = "";
-                    synchronized(messagesToSend){
-                        nextSend = messagesToSend.pop();
-                        hasMessages = !messagesToSend.isEmpty();
+                    synchronized(msgToSend){
+                        nextSend = msgToSend.pop();
+                        isAnyMessage = !msgToSend.isEmpty();
                     }
                     serverOut.println(userName + " > " + nextSend);
                     //clientConnect.setUIText(userName + " > " + nextSend+ "\n");////////////////

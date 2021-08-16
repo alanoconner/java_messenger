@@ -10,8 +10,8 @@ public class clientConnect {
      public static int portNumber =0;
 
     private String userName;
-    private String serverHost;
-    private int serverPort;
+    private String hostNumber;
+    private int portnumber;
     private Scanner userInputScanner;
     static ClientUI clientUI = new ClientUI();
 
@@ -43,18 +43,18 @@ public class clientConnect {
         }
 
         clientConnect clientConnect = new clientConnect(name, host, portNumber);
-        clientConnect.startClient(scan);
+        clientConnect.clientStart(scan);
     }
 
     private clientConnect(String userName, String host, int portNumber){
         this.userName = userName;
-        this.serverHost = host;
-        this.serverPort = portNumber;
+        this.hostNumber = host;
+        this.portnumber = portNumber;
     }
 
-    private void startClient(Scanner scan){
+    private void clientStart(Scanner scan){
         try{
-            Socket socket = new Socket(serverHost, serverPort);
+            Socket socket = new Socket(hostNumber, portnumber);
             Thread.sleep(1000);
 
             ServerThread serverThread = new ServerThread(socket, userName);

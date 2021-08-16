@@ -7,12 +7,12 @@ import java.util.Scanner;
 
 public class ClientThread implements Runnable {
     private Socket socket;
-    private PrintWriter clientOut;
-    private serverPool server;
+    private PrintWriter dataOut;
+    private serverPool serverpool;
     public String inputedMessage;
 
-    public ClientThread(serverPool server, Socket socket){
-        this.server = server;
+    public ClientThread(serverPool serverpool, Socket socket){
+        this.serverpool = serverpool;
         this.socket = socket;
     }
 
@@ -21,17 +21,17 @@ public class ClientThread implements Runnable {
     }
 
     private PrintWriter getWriter(){
-        return clientOut;
+        return dataOut;
     }
 
     @Override
     public void run() {
         try{
             // setup
-            this.clientOut = new PrintWriter(socket.getOutputStream(), false);
+            this.dataOut = new PrintWriter(socket.getOutputStream(), false);
             Scanner in = new Scanner(socket.getInputStream());
 
-            // start communicating
+            // communication
             while(!socket.isClosed()){
                 if(in.hasNextLine()){
 
@@ -39,15 +39,11 @@ public class ClientThread implements Runnable {
                     //String inputUI = inputedMessage;
 
 
-                    for(ClientThread thatClient : server.getClients()){
-                        PrintWriter thatClientOut = thatClient.getWriter();
-                        if(thatClientOut != null&&input!=null){
-                            thatClientOut.write(input + "\r\n");
-                            thatClientOut.flush();
-                            //clientConnect.setUIText(input+"\n");
-                            //thatClient.scannerSetText(input+"\n");
-
-                            //inputUI = null;
+                    for(ClientThread thatClient : serverpool.getClients()){
+                        PrintWriter toClient = thatClient.getWriter();
+                        if(toClient != null&&input!=null){
+                            toClient.write(input + "\r\n");
+                            toClient.flush();
                         }
                     }
                 }
