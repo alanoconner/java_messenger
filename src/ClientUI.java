@@ -59,7 +59,7 @@ public class ClientUI extends JFrame implements ActionListener  {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        //msg_log.append(msg_enter.getText()+"\n");
+
         msg= msg_enter.getText();
         clientThread.scannerSetText(msg);
         msg_enter.setText(null);

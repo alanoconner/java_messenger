@@ -36,8 +36,6 @@ public class ClientThread implements Runnable {
                 if(in.hasNextLine()){
 
                     String input = in.nextLine();
-                    //String inputUI = inputedMessage;
-
 
                     for(ClientThread thatClient : serverpool.getClients()){
                         PrintWriter toClient = thatClient.getWriter();
@@ -55,6 +53,6 @@ public class ClientThread implements Runnable {
     }
 
     public void scannerSetText(String msg){
-        //clientConnect.setUIText(msg);
+
     }
 }

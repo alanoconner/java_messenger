@@ -19,31 +19,26 @@ public class clientConnect {
     public static void main(String[] args){
         String name = null;
         Scanner scan = new Scanner(System.in);
-        //System.out.println("Please input username:");
+
         clientUI.setText("Please input username, port and host (e.g. Mike 0000 127.0.0.1):" + "\n");
         String nameporthost = "";
+
         while(name == null && nameporthost.length()<4){
-            System.out.println(getUIText());////I don't know why, but without this line it never break the cycle
-            //name = getUIText();
-            //if(name.trim().equals("")){
-            //    System.out.println("Invalid. Please enter again:");
-            //    clientUI.setText("Invalid. Please enter again:");
-            //    name = null;
-            //}
+
+            System.out.flush();
             if(getUIText()!=null){
                 nameporthost=getUIText();
+                if(nameporthost.length()>7){
+                    String[] data = nameporthost.split(" ");
+                    name = data[0];
+                    portNumber = Integer.parseInt(data[1]);
+                    host = data[2];
+                }
             }
-            if(nameporthost.length()>7){
-                String[] data = nameporthost.split(" ");
-                name = data[0];
-                portNumber = Integer.parseInt(data[1]);
-                host = data[2];
-
-            }
-        }
+        } // while
 
         clientConnect clientConnect = new clientConnect(name, host, portNumber);
-        clientConnect.clientStart(scan);
+        clientConnect.clientStart();
     }
 
     private clientConnect(String userName, String host, int portNumber){
@@ -52,7 +47,7 @@ public class clientConnect {
         this.portnumber = portNumber;
     }
 
-    private void clientStart(Scanner scan){
+    private void clientStart(){
         try{
             Socket socket = new Socket(hostNumber, portnumber);
             Thread.sleep(1000);
