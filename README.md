@@ -47,18 +47,6 @@ java -cp out com.interview.messenger.app.ClientApplication 127.0.0.1 4444 Alice
 > 💡 Run the server in one terminal and start multiple clients (each with a
 > unique username) in separate terminals to see message broadcasting in action.
 
-## Testing the Architecture in Interviews
-
-- Point interviewers to the [architecture document](docs/ARCHITECTURE.md) to
-  highlight the clean layering.
-- Discuss how `ChatRoom` orchestrates the core use-case while depending only on
-  the `ChatParticipant` port.
-- Showcase how the transport protocol is encapsulated by
-  `PlainTextMessageFormatter` and the `Protocol` helper, making it easy to swap
-  in JSON, gRPC, or WebSockets without touching the domain.
-- Demonstrate SOLID compliance: the client controller, formatter, and TCP
-  classes each have a single responsibility and depend on abstractions.
-
 ## Contributing
 
 Improvements and alternative front-ends (CLI, web, mobile) can be added by
