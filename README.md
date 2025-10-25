@@ -1,7 +1,6 @@
 # Java Messenger
 
-A polished client/server chat application implemented in Java and organised
-according to Clean Architecture and SOLID principles. The project exposes a
+A polished client/server chat application implemented in Java. The project exposes a
 TCP based server and a Swing desktop client that demonstrates the separation of
 concerns between domain logic, application use-cases, and infrastructure code.
 
